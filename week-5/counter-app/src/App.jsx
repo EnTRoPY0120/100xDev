@@ -1,25 +1,53 @@
 import { useState } from "react";
 
 function App() {
-  const [count, setcount] = useState(0);
+  const [todos, setTodos] = useState([
+    {
+      title: "Go to gym",
+      description: "Go to gym at 11 am",
+      completed: false,
+    },
+    {
+      title: "Go to mall",
+      description: "go to mall and buy groceries",
+      completed: false,
+    },
+  ]);
 
+  function addTodo() {
+    setTodos([
+      ...todos,
+      {
+        title: "title",
+        description: "description",
+      },
+    ]);
+  }
   return (
     <>
       <div>
-        <CustomButton count={count} setcount={setcount}></CustomButton>
+        <button onClick={addTodo}>Add a todo</button>
+        {todos.map(function (todo, index) {
+          return (
+            <Todo
+              key={index}
+              title={todo.title}
+              description={todo.description}
+            />
+          );
+        })}
       </div>
     </>
   );
 }
 
-function CustomButton(state) {
-  function onClickHandler() {
-    state.setcount(state.count + 1);
-  }
-
+function Todo(state) {
   return (
     <>
-      <button onClick={onClickHandler}>Counter {state.count} </button>
+      <div>
+        <h1>{state.title}</h1>
+        <p>{state.description}</p>
+      </div>
     </>
   );
 }
