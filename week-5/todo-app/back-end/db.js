@@ -8,7 +8,7 @@
 
 const mongoose = require("mongoose");
 mongoose.connect(
-  "mongodb+srv://VJ:Wrc9vupTYHoqhPis@cluster0.74fkbrg.mongodb.net/todos",
+  "Enter your mongoDB url here"
 );
 
 const todoSchema = new mongoose.Schema({
