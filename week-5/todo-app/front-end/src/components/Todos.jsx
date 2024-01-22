@@ -1,4 +1,4 @@
-/* todos = [
+  /* todos = [
    {
     title: "go to gym",
     description: "go to gym",
@@ -10,7 +10,7 @@ export function Todos({ todos }) {
     <div>
       {todos.map(function (todo) {
         return (
-          <div>
+          <div key={todo}>
             <h1>{todo.title}</h1>
             <h2>{todo.description}</h2>
             <button>
