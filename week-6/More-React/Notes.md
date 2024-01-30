@@ -156,3 +156,92 @@ function Todo({ title, description }) {
   );
 }
 ```
+
+**_Example 5 : useEffect() using axios_**
+
+```js
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
+
+function App() {
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("https://sum-server.100xdevs.com/todos")
+      .then(function (response) {
+        setTodos(response.data.todos);
+      });
+  }, []);
+
+  return (
+    <>
+      {todos.map((todo) => {
+        return (
+          <Todos
+            key={todo.id}
+            title={todo.title}
+            description={todo.description}
+          />
+        );
+      })}
+    </>
+  );
+}
+
+function Todos({ title, description }) {
+  return (
+    <div>
+      <h1>{title}</h1>
+      <h5>{description}</h5>
+    </div>
+  );
+}
+export default App;
+```
+
+**_Example 6 : useEffect() and fetching the data from the server using a variable as the dependency_**
+
+```js
+import axios from "axios";
+import { useState } from "react";
+import { useEffect } from "react";
+
+function App() {
+  const [selectedId, setSelectedId] = useState(1);
+  function setId(id) {
+    setSelectedId(id);
+  }
+  return (
+    <div>
+      <button onClick={() => setId(1)}>1</button>
+
+      <button onClick={() => setId(2)}>2</button>
+      <button onClick={() => setId(3)}>3</button>
+      <button onClick={() => setId(4)}>4</button>
+      <Todo id={selectedId} />
+    </div>
+  );
+}
+
+function Todo({ id }) {
+  const [todo, setTodo] = useState({});
+
+  useEffect(() => {
+    axios
+      .get(`https://sum-server.100xdevs.com/todo?id=${id}`)
+      .then(function (response) {
+        setTodo(response.data.todo);
+        console.log(response.data.todo);
+      });
+  });
+  return (
+    <div>
+      <h1>{todo.title}</h1>
+      <h5>{todo.description}</h5>
+    </div>
+  );
+}
+export default App;
+```
