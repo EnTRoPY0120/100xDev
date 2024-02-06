@@ -5,8 +5,8 @@ export function BusinessCard(props) {
       <p style={styles.description}>{props.description}</p>
       <h3 style={styles.interestsHeader}>Interests</h3>
       <ul style={styles.interestsList}>
-        {props.interests.map((interest, index) => (
-          <li key={index} style={styles.interestItem}>
+        {props.interests.map((interest) => (
+          <li key={interest} style={styles.interestItem}>
             {interest}
           </li>
         ))}
