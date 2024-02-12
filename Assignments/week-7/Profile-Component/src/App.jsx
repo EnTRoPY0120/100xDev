@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import "./App.css";
+import profile from "./assets/creepy_cabin_guy.png";
+import { RecoilRoot, useRecoilValue } from "recoil";
+import { allCount } from "./store/atoms/count";
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <RecoilRoot>
+        <ProfileComponent />
+      </RecoilRoot>
+    </div>
+  );
 }
 
-export default App
+function ProfileComponent() {
+  const network = useRecoilValue(allCount);
+  return (
+    <>
+      <div className="enclosing">
+        <div>
+          <img src={profile} width={"320px"} height={"220px"} />
+          <br/>
+          <b>
+            Rita Correia 
+          </b>    32
+          
+          <p>  London</p>
+        </div>
+        <hr/>
+        <div>
+          <ul className="profile-stats">
+            <li>
+              <span className="stat-count">{network.Followers >= 1000 ? Math.floor(network.Followers/1000)+ "K": network.Followers}</span>
+              <br /> Followers
+            </li>
+            <li>
+              <span className="stat-count">{network.Likes >= 1000 ? Math.floor(network.Likes/1000)+ "K": network.Likes}</span> <br /> Likes
+            </li>
+            <li>
+              <span className="stat-count">{network.Photos >= 1000 ? Math.floor(network.Photos/1000)+ "K": network.Photos}</span>
+              <br /> Posts
+            </li>
+          </ul>{" "}
+        </div>
+      </div>
+    </>
+  );
+}
+export default App;
