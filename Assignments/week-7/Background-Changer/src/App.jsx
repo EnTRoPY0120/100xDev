@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { RecoilRoot, useRecoilState } from 'recoil';
+import './App.css'; // Import your CSS file for styling
+import { background } from './store/atoms/background';
 
-function App() {
-  const [count, setCount] = useState(0)
+function App () {
+return <div>
+  <RecoilRoot>
+    <ChangeBackgroundColor/>
+  </RecoilRoot>
+</div>
+};
 
+
+function ChangeBackgroundColor(){
+const [backgroundColor, setBackgroundColor] = useRecoilState(background)
+function handleColorChange(color){
+  setBackgroundColor(color);
+}
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app-container" style={{ backgroundColor }}>
+     <div>
+        <h1>Welcome to My App</h1>
+        <p>This is the content of my app.</p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className="background-changer">
+      <button onClick={() => handleColorChange("#FF0000")} >Red</button>
+        <button onClick={() => handleColorChange("#FFFF00")} >Yellow</button>
+        <button onClick={() => handleColorChange("#000000")} >Black</button>
+        <button onClick={() => handleColorChange("#800080")} >Purple</button>
+        <button onClick={() => handleColorChange("#008000")} >Green</button>
+        <button onClick={() => handleColorChange("#0000FF")} >Blue</button>
+        <button onClick={() => handleColorChange("#ffffff")} >Default</button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
-export default App
+export default App;
