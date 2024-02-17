@@ -60,7 +60,7 @@ const signInBody = zod.object({
   password: zod.string(),
 });
 
-router.post("/sigin", async (req, res) => {
+router.post("/signin", async (req, res) => {
   const { success } = signInBody.safeParse(req.body);
   if (!success) {
     res.status(411).json({
@@ -107,7 +107,7 @@ router.put("/", authMiddleware, async (req, res) => {
   });
 });
 
-router.put("/bulk", async (req, res) => {
+router.get("/bulk", async (req, res) => {
   const filter = req.query.filter || "";
 
   const users = await User.find({
