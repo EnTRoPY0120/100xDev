@@ -1,8 +1,6 @@
 const { default: mongoose, mongo } = require("mongoose");
 
-mongoose.connect(
-  "mongodb+srv://VJ:Wrc9vupTYHoqhPis@cluster0.74fkbrg.mongodb.net/paytm",
-);
+mongoose.connect("mongodb://localhost:27017/paytm");
 
 // Create a mongoose Schema
 const userSchema = new mongoose.Schema({

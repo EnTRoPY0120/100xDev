@@ -1,3 +1,3 @@
 module.exports = {
-  JWT_SECRET: "vjsecret",
+  JWT_SECRET: "vj-secret",
 };

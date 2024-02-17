@@ -16,8 +16,6 @@ const authMiddleware = (req, res, next) => {
     if (decoded.userId) {
       req.userId = decoded.userId;
       next();
-    } else {
-      return res.status(403).json({});
     }
   } catch (error) {
     return res.status(403).json({
