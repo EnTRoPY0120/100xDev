@@ -182,3 +182,147 @@ function Profile() {
   return <div>hello, you have {data.todos.length} todos!</div>;
 }
 ```
+
+**_Example 4: useIsOnline custom hook_**
+
+```js
+import { useIsOnline } from "./hooks/useIsOnline";
+
+function App() {
+  const isOnline = useIsOnline();
+
+  return (
+    <div>
+      {isOnline ? "You are Online" : "You are offline connect to the internet"}
+    </div>
+  );
+}
+// exported via hook folder
+import { useEffect, useState } from "react";
+
+export function useIsOnline() {
+isOnline, setIsOnline] = useState(true); // Set initial state to true
+
+  useEffect(() => {
+    const updateOnlineStatus = () => {
+      setIsOnline(window.navigator.onLine);
+    };
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    // Cleanup function to remove event listeners
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []); // Empty dependency array to add event listeners only once
+
+  return isOnline;
+}
+```
+
+**_Example 5: useMousePointer hook_**
+
+```js
+import { useEffect, useState } from "react";
+
+const useMousePointer = () => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    setPosition({ x: e.clientX, y: e.clientY });
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  return position;
+};
+
+function App() {
+  const mousePointer = useMousePointer();
+
+  return (
+    <>
+      Your mouse position is {mousePointer.x} {mousePointer.y}
+    </>
+  );
+}
+```
+
+**_Example 6: Timer based customHook_**
+
+```js
+import { useEffect, useState } from "react";
+
+function useInterval(callback, delay) {
+  useEffect(() => {
+    const intervalId = setInterval(callback, delay);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [callback, delay]);
+}
+
+function App() {
+  const [count, setCount] = useState(0);
+
+  useInterval(() => {
+    setCount((c) => c + 1);
+  }, 1000);
+
+  return <>Timer is at {count}</>;
+}
+
+export default App;
+```
+
+**_Example 7: useDebounce hook_**
+
+```js
+import { useEffect, useState } from "react";
+import axios from "axios";
+import useDebounce from "./hooks/useDebounce";
+
+const SearchBar = () => {
+  const [inputValue, setInputValue] = useState("");
+  const debouncedValue = useDebounce(inputValue, 500); // 500 milliseconds debounce delay
+
+  // Use the debouncedValue in your component logic, e.g., trigger a search API call via a useEffect
+  useEffect(() => {
+    axios.get("some URL for fetching the data with the debouncedValue from BE");
+  }, []);
+
+  return (
+    <input
+      type="text"
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      placeholder="Search..."
+    />
+  );
+};
+// exported via ./hooks/useDebounce
+import { useEffect, useState } from "react";
+
+export function useDebounce(inputValue, delay) {
+  const [debounceValue, setDebounceValue] = useState(inputValue);
+
+  useEffect(() => {
+    const timeoutId = setInterval(() => {
+      setDebounceValue(inputValue);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [inputValue, delay]);
+  return debounceValue;
+}
+```
