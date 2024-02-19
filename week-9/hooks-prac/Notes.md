@@ -1,0 +1,184 @@
+**_Example 1: class vs functional based hooks
+Both of them does the same thing as React is backward Compatible_**
+
+```js
+// function based
+import React, { useState } from "react";
+
+function MyComponent() {
+  const [count, setCount] = useState(0);
+
+  const incrementCount = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <p>{count}</p>
+      <button onClick={incrementCount}>Increment</button>
+    </div>
+  );
+}
+
+// Class based
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  incrementCount = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return (
+      <div>
+        <p>{this.state.count}</p>
+        <button onClick={this.incrementCount}>Increment</button>
+      </div>
+    );
+  }
+}
+```
+
+**_Example 2: Life Cycle events in functional hooks and class based components in React_**
+
+```js
+import "./App.css";
+import React, { useEffect, useState } from "react";
+// functional
+function App() {
+  const [render, setRender] = useState(true);
+
+  useEffect(() => {
+    setInterval(() => {
+      setRender((render) => !render);
+    }, 5000);
+  }, []);
+
+  return <>{render ? <MyComponent /> : <div>2nd div</div>}</>;
+}
+
+function MyComponent() {
+  useEffect(() => {
+    console.error("component mounted");
+
+    return () => {
+      console.log("Component unmounted");
+    };
+  }, []);
+
+  return <div>from inside my component</div>;
+}
+
+// class based
+function App() {
+  const [render, setRender] = useState(true);
+
+  useEffect(() => {
+    setInterval(() => {
+      setRender((render) => !render);
+    }, 5000);
+  }, []);
+
+  return <>{render ? <MyComponent /> : <div>2nd div</div>}</>;
+}
+
+class MyComponent extends React.Component {
+  componentDidMount() {
+    // Perform setup or data fetching here
+    console.log("component Mounted");
+  }
+
+  componentWillUnmount() {
+    // Clean up (e.g., remove event listeners or cancel subscriptions)
+    console.log("component Unmounted");
+  }
+
+  render() {
+    // Render UI
+    return <div>hello there</div>;
+  }
+}
+```
+
+**_Example 3: Creating a simple custom hook_**
+
+```js
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+function useTodos(n) {
+  const [todos, setTodos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const value = setInterval(() => {
+      axios.get("https://sum-server.100xdevs.com/todos").then((res) => {
+        setTodos(res.data.todos);
+        setLoading(false);
+      });
+    }, n * 1000);
+
+    axios.get("https://sum-server.100xdevs.com/todos").then((res) => {
+      setTodos(res.data.todos);
+      setLoading(false);
+    });
+
+    return () => {
+      clearInterval(value);
+    };
+  }, [n]);
+  return { todos, loading };
+}
+
+function App() {
+  const { todos, loading } = useTodos(5);
+
+  if (loading) {
+    return <div>loading.......</div>;
+  }
+  return (
+    <>
+      {todos.map((todo) => (
+        <Track key={todo.id} todo={todo} />
+      ))}
+    </>
+  );
+}
+
+function Track({ todo }) {
+  return (
+    <div>
+      {todo.title}
+      <br />
+      {todo.description}
+    </div>
+  );
+}
+```
+
+**_Example 4: fetching data from the BE using a popular React library - SWR_**
+
+```js
+import useSWR from "swr";
+
+// const fetcher = (url) => fetch(url).then((res) => res.json());
+const fetcher = async function (url) {
+  const data = await fetch(url);
+  const json = await data.json();
+  return json;
+};
+
+function Profile() {
+  const { data, error, isLoading } = useSWR(
+    "https://sum-server.100xdevs.com/todos",
+    fetcher,
+  );
+
+  if (error) return <div>failed to load</div>;
+  if (isLoading) return <div>loading...</div>;
+  return <div>hello, you have {data.todos.length} todos!</div>;
+}
+```
