@@ -3,7 +3,7 @@ import { Client } from 'pg';
 // Async function to fetch user data and their address together
 export default async function getUserDetailsWithAddress(userId: string) {
     const client = new Client({
-    connectionString:"postgresql://vijayarajdvr:JgVENtcO6iA9@ep-spring-frost-14728719.ap-southeast-1.aws.neon.tech/testDB?sslmode=require"});
+    connectionString:"DATABASE_URL"});
 
     try {
         await client.connect();

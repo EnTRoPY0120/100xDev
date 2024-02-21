@@ -4,7 +4,7 @@ import getUserDetailsWithAddress from "./joins";
 
 const client = new Client({
   connectionString:
-    "postgresql://vijayarajdvr:JgVENtcO6iA9@ep-spring-frost-14728719.ap-southeast-1.aws.neon.tech/testDB?sslmode=require",
+  "DATABASE_URL" 
 });
 
 async function createUsersTable() {
@@ -54,7 +54,7 @@ async function insertIntoUserTable(username :string,email :string, password:stri
 
   await client.connect();
   const insertUsers = `
-  INSERT INTO users (name , email,password ) VALUES ($1,$2,$3) returning id`;
+  INSERT INTO users (name , email,password ) VALUES ($1,$2,$3) RETURNING id`;
   const values = [username, email,password];
 
   const result = await client.query(insertUsers,values)
