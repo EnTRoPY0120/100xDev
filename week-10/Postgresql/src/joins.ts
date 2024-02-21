@@ -1,9 +1,13 @@
 import { Client } from 'pg';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Async function to fetch user data and their address together
 export default async function getUserDetailsWithAddress(userId: string) {
+
     const client = new Client({
-    connectionString:"DATABASE_URL"});
+      connectionString: process.env.DATABASE_URL });
 
     try {
         await client.connect();

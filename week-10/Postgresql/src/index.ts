@@ -1,10 +1,13 @@
 // write the code to create a table in the database
 import { Client } from "pg";
 import getUserDetailsWithAddress from "./joins";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const client = new Client({
   connectionString:
-  "DATABASE_URL" 
+  process.env.DATABASE_URL 
 });
 
 async function createUsersTable() {

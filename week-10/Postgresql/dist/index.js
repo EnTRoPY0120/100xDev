@@ -15,8 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // write the code to create a table in the database
 const pg_1 = require("pg");
 const joins_1 = __importDefault(require("./joins"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const client = new pg_1.Client({
-    connectionString: "postgresql://vijayarajdvr:JgVENtcO6iA9@ep-spring-frost-14728719.ap-southeast-1.aws.neon.tech/testDB?sslmode=require",
+    connectionString: process.env.DATABASE_URL
 });
 function createUsersTable() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -73,7 +75,7 @@ function insertIntoUserTable(username, email, password) {
         try {
             yield client.connect();
             const insertUsers = `
-  INSERT INTO users (name , email,password ) VALUES ($1,$2,$3) returning id`;
+  INSERT INTO users (name , email,password ) VALUES ($1,$2,$3) RETURNING id`;
             const values = [username, email, password];
             const result = yield client.query(insertUsers, values);
             console.log("Insertion success", result);
