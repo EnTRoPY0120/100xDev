@@ -4,7 +4,7 @@ import getUserDetailsWithAddress from "./joins";
 
 const client = new Client({
   connectionString:
-    "postgresql://vijayarajdvr:JgVENtcO6iA9@ep-spring-frost-14728719.ap-southeast-1.aws.neon.tech/testDB?sslmode=require",
+    "",
 });
 
 async function createUsersTable() {
