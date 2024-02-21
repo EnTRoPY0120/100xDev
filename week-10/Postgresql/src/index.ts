@@ -1,5 +1,6 @@
 // write the code to create a table in the database
 import { Client } from "pg";
+import getUserDetailsWithAddress from "./joins";
 
 const client = new Client({
   connectionString:
@@ -25,7 +26,28 @@ async function createUsersTable() {
   }
 }
 
-//createUsersTable().catch(console.error);
+async function createAddressTable() {
+  try{await client.connect();
+  const userTable = await client.query(`
+  CREATE TABLE addresses (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    street VARCHAR(255) NOT NULL,
+    pincode VARCHAR(20),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE );
+  `);
+  console.log(userTable);
+  } catch(err){
+    console.error("Error creating the User Table",err) 
+  } finally{
+    await client.end();
+  }
+}
+// createUsersTable().catch(console.error);
+// createAddressTable();
 
 async function insertIntoUserTable(username :string,email :string, password:string){
  try{
@@ -44,8 +66,25 @@ async function insertIntoUserTable(username :string,email :string, password:stri
   }
 };
 
-//insertIntoUserTable('username5', 'user5@example.com', 'user_password').catch(console.error);
+async function insertIntoAddressTable(user_id:number,city:string,country:string,street:string,pincode:string){
+ try{
 
+  await client.connect();
+  const insertUsers = `
+  INSERT INTO addresses (user_id, city, country, street, pincode) VALUES ($1,$2,$3,$4,$5) returning id`;
+  const values = [user_id,city,country,street,pincode];
+
+  const result = await client.query(insertUsers,values)
+  console.log("Insertion success",result);
+  } catch(err){
+    console.error("Error during the insertion:",err)
+  } finally{
+    await client.end();
+  }
+}
+
+// insertIntoUserTable('username5', 'user5@example.com', 'user_password').catch(console.error);
+// insertIntoAddressTable(1, 'New York', 'USA', '123 Broadway St', '10001');
 
 async function getUsers(email: string){
   try{
@@ -66,4 +105,10 @@ async function getUsers(email: string){
   }
 }
 
-getUsers("user5@example.com");
+
+
+//getUsers("user5@example.com");
+
+getUserDetailsWithAddress("1");
+
+
