@@ -1,6 +1,6 @@
 import { Client } from 'pg'
-import { DB_URL } from './config';
+import { DB } from './config';
 
 export const client = new Client({
-    connectionString: DB_URL
+    connectionString: DB
 });
