@@ -1,0 +1,27 @@
+{
+  "name": "2-prisma-simple",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "start": "node dist/index.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "5.10.2",
+    "@types/jest": "^29.5.12",
+    "@types/pg": "^8.11.0",
+    "pg": "^8.11.3",
+    "typescript": "^5.3.3",
+    "yarn": "^1.22.21"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "prisma": "^5.10.2",
+    "ts-jest": "^29.1.2"
+  }
+}
