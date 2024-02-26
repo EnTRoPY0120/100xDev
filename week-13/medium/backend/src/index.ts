@@ -1,7 +1,9 @@
 import { Hono } from "hono";
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
-import { decode, sign, verify } from 'hono/jwt'
+import { userRouter } from "./routes/user";
+import { blogRouter } from "./routes/blog";
+import { verify } from "hono/jwt";
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
 
 // Create the main Hono app
 const app = new Hono<{
@@ -10,11 +12,12 @@ const app = new Hono<{
     JWT_SECRET: string
   },
   Variables:{
-    userId:string
+    userId:string,
+    prisma : any
   }
 }>();
 
-app.use('/api/v1/blogs/*', async (c,next) => {
+app.use('/api/v1/blog/*', async (c,next) => {
   const header = c.req.header("Authorization") || "";
   const token = header.split(" ")[1]; 
   const response = await verify(token,c.env.JWT_SECRET)
@@ -29,63 +32,20 @@ app.use('/api/v1/blogs/*', async (c,next) => {
   }
 })
 
-app.post("/api/v1/signup", async (c) => {
+app.use('/api/v1/*', async (c,next) =>{
   const prisma = new PrismaClient({
-    datasourceUrl: c.env?.DATABASE_URL,
-  }).$extends(withAccelerate())
+    datasourceUrl : c.env?.DATABASE_URL
+  }).$extends(withAccelerate());
 
-  const body = await c.req.json();
-  try{
-  const user = await prisma.user.create({
-    data:{
-      email:body.email,
-      password:body.password
-    }
-  })
+  c.set('prisma',prisma);
+  await next();
+})
 
-  const token = await sign({id: user.id },c.env.JWT_SECRET);
-  return c.json({token});
-  } catch(err){
-    c.status(403);
-    return c.json({ error:"Error while signing up"})
-  }
+app.route('/api/v1/user', userRouter );
+app.route('/api/v1/blog', blogRouter);
 
-});
 
-app.post('/api/v1/signin', async (c) => {
-	const prisma = new PrismaClient({
-		datasourceUrl: c.env?.DATABASE_URL	,
-	}).$extends(withAccelerate());
 
-	const body = await c.req.json();
-	const user = await prisma.user.findUnique({
-		where: {
-			email: body.email,
-      password : body.password
-		}
-	});
 
-  if(!user){
-    c.status(403);
-    return c.json({error:" User not found"})
-  }
-
-  const token = await sign({ id: user.id}, c.env.JWT_SECRET);
-  return c.json({token})
-});
-
-app.post("/api/v1/blog", (c) => {
-  return c.text("signin route");
-});
-
-app.put("/api/v1/blog", (c) => {
-  return c.text("signin route");
-});
-
-app.get("/api/v1/blog/:id", (c) => {
-  const id = c.req.param("id");
-  console.log(id);
-  return c.text("get blog route");
-});
 
 export default app;
