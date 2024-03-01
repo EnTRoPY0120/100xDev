@@ -55,16 +55,34 @@ blogRouter.put("/", async (c) => {
   return c.json({ message: "Post has been updated" });
 });
 
+// Todo : Add pagination
+blogRouter.get("/bulk", async (c) => {
+  const prisma = c.get("prisma");
+  try{
+    const posts = await prisma.post.findMany();
+  return c.json({
+    posts,
+  });
+}catch(e){
+  console.log("Error fetching the blogs",e);
+}
+});
+
 blogRouter.get("/:id", async (c) => {
   const id = c.req.param("id");
-
   const prisma = c.get("prisma");
-  const post = await prisma.post.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  c.status(200);
-  return c.json(post);
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        id,
+      },
+    });
+    c.status(200);
+    return c.json(post);
+  } catch (e) {
+    c.status(411);
+    return c.json({ message: "Error while fetching the blog post" });
+  }
 });
+
+
