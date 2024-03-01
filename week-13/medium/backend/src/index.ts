@@ -4,6 +4,7 @@ import { blogRouter } from "./routes/blog";
 import { verify } from "hono/jwt";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
+import { cors } from "hono/cors";
 
 // Create the main Hono app
 const app = new Hono<{
@@ -16,6 +17,8 @@ const app = new Hono<{
     prisma: any;
   };
 }>();
+
+app.use("/*",cors());
 
 app.use("/api/v1/blog/*", async (c, next) => {
   const header = c.req.header("Authorization") || "";
