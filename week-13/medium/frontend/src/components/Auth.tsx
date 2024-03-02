@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { ChangeEvent, useState } from "react"
 import { SignupInput } from "@vj-npm/common-app"
 import axios from "axios"
-import { BACKEND_URL } from "../../config"
+import { BACKEND_URL } from "../config"
 export const Auth =({type}: {type:"signup"| "signin"}) =>{
     const navigate = useNavigate();
     const [postInputs,setPostInputs] = useState<SignupInput>({
@@ -15,7 +15,7 @@ export const Auth =({type}: {type:"signup"| "signin"}) =>{
         try{
             const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type}`,postInputs);
             const jwt = response.data.token;
-            localStorage.setItem("token",jwt);
+            localStorage.setItem("token",`Bearer ${jwt}`);
             navigate("/blogs")
         }  
          catch(e){
