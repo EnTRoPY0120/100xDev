@@ -1,0 +1,7 @@
+{
+  "name": "@repo/store",
+  "packageManager": "yarn@4.1.1",
+  "dependencies": {
+    "typescript": "^5.4.3"
+  }
+}
