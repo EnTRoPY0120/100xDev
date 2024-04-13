@@ -1,7 +1,8 @@
 - Clone the repo
 
 ```jsx
-git clone https://github.com/100xdevs-cohort-2/week-17-final-code
+git clone git@github.com:EnTRoPY0120/100xDev.git
+cd week-18/CI_CD
 ```
 
 - npm install
